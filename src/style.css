@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: BarlowCondensed-Regular;
+  src: url(../public/BarlowCondensed-Regular.ttf);
+}
+@font-face {
+  font-family: BarlowCondensed-SemiBold;
+  src: url(../public/BarlowCondensed-SemiBold.ttf);
+}
+@font-face {
+  font-family: BarlowCondensed-Medium;
+  src: url(../public/BarlowCondensed-Medium.ttf);
+}
+@font-face {
+  font-family: BarlowCondensed-Bold;
+  src: url(../public/BarlowCondensed-Bold.ttf);
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: BarlowCondensed-Regular;
+ 
+}
+
+.font-medium{
+  font-family: BarlowCondensed-Medium;
+}
+.font-semibold{
+  font-family: BarlowCondensed-SemiBold;
+}
+.font-bold{
+  font-family: BarlowCondensed-Bold;
+}
+
+.container{
+  max-width: 1340px!important;
+  /* background: #ffffff4f; */
+}
