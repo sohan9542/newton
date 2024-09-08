@@ -19,25 +19,35 @@
   src: url(../public/BarlowCondensed-Bold.ttf);
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: BarlowCondensed-Regular;
- 
 }
 
-.font-medium{
+.font-medium {
   font-family: BarlowCondensed-Medium;
 }
-.font-semibold{
+.font-semibold {
   font-family: BarlowCondensed-SemiBold;
 }
-.font-bold{
+.font-bold {
   font-family: BarlowCondensed-Bold;
 }
 
-.container{
-  max-width: 1340px!important;
+.container {
+  max-width: 1340px !important;
   /* background: #ffffff4f; */
+}
+
+@media only screen and (max-width: 1330px) {
+  .container {
+    padding: 0 30px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .container {
+    padding: 0 10px;
+  }
 }

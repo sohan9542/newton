@@ -114,11 +114,6 @@ const productPageAnimationOpen = () => {
     },
     onDragStart: function () {
       // GSAP animation to apply during dragging
-      gsap.to(this.target, {
-        scale: 1.1, // Example animation
-        ease: "power2.out",
-        duration: 0.4,
-      });
 
       if (this.x > this.startX) {
         gsap.to(ground.value, {
@@ -136,14 +131,7 @@ const productPageAnimationOpen = () => {
         });
       }
     },
-    onRelease: function () {
-      // Reset the animation when drag ends
-      gsap.to(this.target, {
-        scale: 1, // Reset the scaling
-        ease: "power2.out",
-        duration: 0.4,
-      });
-    },
+    onRelease: function () {},
   });
 };
 const productPageAnimationClose = () => {
@@ -153,11 +141,22 @@ const productPageAnimationClose = () => {
     duration: 1,
     ease: "power2.inOut",
   });
-  gsap.to(product.value, {
+
+  mm.add("(min-width: 800px)", () => {
+    gsap.to(product.value, {
     transform: "translateX(300%)",
     duration: 1,
     ease: "power2.inOut",
   });
+  })
+  mm.add("(max-width: 600px)", () => {
+    gsap.to(product.value, {
+    transform: "translateX(600%)",
+    duration: 1,
+    ease: "power2.inOut",
+  });
+  })
+
 
   gsap.to(".carousel-item img", {
     transform: "translateX(100%)",
@@ -203,6 +202,7 @@ const productPageAnimationClose = () => {
     y: 0,
   });
 };
+const mm = gsap.matchMedia();
 
 const expandCard = (index) => {
   if (true) {
@@ -250,39 +250,108 @@ const expandCard = (index) => {
     const rect = image.getBoundingClientRect();
     const targetX = windowWidth / 2 - rect.width / 2;
     const targetY = windowHeight / 2 - rect.height / 2;
+
+    mm.add("(min-width: 800px)", () => {
+  // GSAP animations for screens wider than 800px
+  const imageAnim = gsap.to(image, {
+    x: targetX - 250 - rect.left,
+    y: targetY - 70 - rect.top,
+    scale: 1.3,
+    ease: "power2.inOut",
+    duration: 1,
+  });
+
+  const depAnim = gsap.to(dep, {
+    x: targetX - 100 - rect.left,
+    y: targetY + 30 - rect.top,
+    opacity: 1,
+    ease: "power2.inOut",
+    duration: 1,
+  });
+
+  const productCloseAnim = gsap.to(productClose, {
+    opacity: 1,
+    ease: "power2.inOut",
+    duration: 1,
+    scale: 1,
+  });
+
+  const h1ElementAnim = gsap.to(h1Element, {
+    x: targetX + 290 - rect.left,
+    y: targetY + 50 - rect.top,
+    ease: "power2.inOut",
+    duration: 1,
+  });
+
+  const descAnim = gsap.to(desc, {
+    x: targetX + 295 - rect.left,
+    y: targetY - 70 - rect.top,
+    ease: "power2.inOut",
+    duration: 1,
+  });
+
+  // Cleanup function when media query changes
+  return () => {
+    imageAnim.kill();
+    depAnim.kill();
+    productCloseAnim.kill();
+    h1ElementAnim.kill();
+    descAnim.kill();
+  };
+});
+
+mm.add("(max-width: 600px)", () => {
+  // GSAP animations for screens smaller than or equal to 600px
+  const imageAnim = gsap.to(image, {
+    x: targetX - 50 - rect.left,
+    y: targetY - 100 - rect.top,
+    scale: 0.7,
+    ease: "power2.inOut",
+    duration: 1,
+  });
+
+  const depAnim = gsap.to(dep, {
+    x: targetX + 240 - rect.left,
+    y: targetY - 230 - rect.top,
+    opacity: 1,
+    scale: 0.6,
+    ease: "power2.inOut",
+    duration: 1,
+  });
+
+  const productCloseAnim = gsap.to(productClose, {
+    opacity: 1,
+    ease: "power2.inOut",
+    duration: 1,
+    top: '300px',
+    right: '40px',
+    scale: 1,
+  });
+
+  const h1ElementAnim = gsap.to(h1Element, {
+    x: targetX - rect.left,
+    y: targetY + 190 - rect.top,
+    ease: "power2.inOut",
+    duration: 1,
+  });
+
+  const descAnim = gsap.to(desc, {
+    x: targetX - rect.left,
+    y: targetY + 20 - rect.top,
+    ease: "power2.inOut",
+    duration: 1,
+  });
+
+  // Cleanup function when media query changes
+  return () => {
+    imageAnim.kill();
+    depAnim.kill();
+    productCloseAnim.kill();
+    h1ElementAnim.kill();
+    descAnim.kill();
+  };
+});
     // console.log("img", image);
-    gsap.to(image, {
-      x: targetX - 250 - rect.left,
-      y: targetY - 70 - rect.top,
-      scale: 1.3,
-      ease: "power2.inOut",
-      duration: 1,
-    });
-    gsap.to(dep, {
-      x: targetX - 100 - rect.left,
-      y: targetY + 30 - rect.top,
-      opacity: 1,
-      ease: "power2.inOut",
-      duration: 1,
-    });
-    gsap.to(productClose, {
-      opacity: 1,
-      ease: "power2.inOut",
-      duration: 1,
-      scale: 1,
-    });
-    gsap.to(h1Element, {
-      x: targetX + 290 - rect.left,
-      y: targetY + 50 - rect.top,
-      ease: "power2.inOut",
-      duration: 1,
-    });
-    gsap.to(desc, {
-      x: targetX + 295 - rect.left,
-      y: targetY - 70 - rect.top,
-      ease: "power2.inOut",
-      duration: 1,
-    });
   }
 };
 
@@ -357,7 +426,9 @@ const products = ref([
     >
       <div class="container mx-auto">
         <!-- start of navbar -->
-        <div class="flex items-center justify-between my-5">
+        <div
+          class="flex items-center flex-col lg:flex-row gap-2 justify-between my-5"
+        >
           <div class="flex items-center gap-10">
             <a
               class="text-white hover:text-[#F8D8A0]"
@@ -407,12 +478,14 @@ const products = ref([
         </div>
         <!-- end of navbar -->
         <!-- start of tabs -->
-        <div class="flex items-center justify-center gap-16 w-full my-[30px]">
+        <div
+          class="flex items-center justify-center gap-2 lg:gap-16 w-full my-[30px]"
+        >
           <p
             @click="pushRoute('/products')"
             :class="`uppercase ${
               routePath === '/products' ? 'text-primary' : 'text-white'
-            } text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
+            } text-[16px] lg:text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
           >
             Products
           </p>
@@ -420,7 +493,7 @@ const products = ref([
             @click="pushRoute('/locations')"
             :class="`uppercase ${
               routePath === '/locations' ? 'text-primary' : 'text-white'
-            } text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
+            } text-[16px] lg:text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
           >
             Locations
           </p>
@@ -428,7 +501,7 @@ const products = ref([
             @click="pushRoute('/news')"
             :class="`uppercase ${
               routePath === '/news' ? 'text-primary' : 'text-white'
-            } text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
+            } text-[16px] lg:text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
           >
             News
           </p>
@@ -436,7 +509,7 @@ const products = ref([
             @click="pushRoute('/about')"
             :class="`uppercase ${
               routePath === '/about' ? 'text-primary' : 'text-white'
-            } text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
+            } text-[16px] lg:text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
           >
             About
           </p>
@@ -444,7 +517,7 @@ const products = ref([
             @click="pushRoute('/contact')"
             :class="`uppercase ${
               routePath === '/contact' ? 'text-primary' : 'text-white'
-            } text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
+            } text-[16px] lg:text-[24px] font-medium cursor-pointer hover:text-[#F8D8A0]`"
           >
             Contact
           </p>
@@ -457,11 +530,13 @@ const products = ref([
       <div class="container mx-auto">
         <div class="w-full relative">
           <div class="transform -translate-x-[100%]" ref="left">
-            <h1 class="text-primary text-[180px] font-bold leading-[170px]">
+            <h1
+              class="text-primary text-[80px] leading-[80px] lg:text-[180px] font-bold lg:leading-[170px]"
+            >
               HAPPINESS <br />
               SMELLING BREAD
             </h1>
-            <p class="w-[40%] mt-[50px] text-[20px] text-white">
+            <p class="lg:w-[40%] mt-3 lg:mt-[50px] text-[20px] text-white">
               Our Loaves Lorem ipsum dolor sit amet consectetur adipisicing
               elit. Animi et esse error inventore cumque nihil architecto iure!
               Enim soluta esse maxime impedit laborum, aperiam, est id, velit
@@ -488,7 +563,7 @@ const products = ref([
 
       <!-- products sections start -->
       <div
-        class="mt-[100px] w-full transform translate-x-[300%] absolute z-50 top-[120px] left-0"
+        class="mt-[100px] w-full transform translate-x-[300%] absolute z-50 top-[200px] lg:top-[120px] left-0"
         ref="product"
       >
         <div class="container mx-auto">
@@ -498,17 +573,17 @@ const products = ref([
                 v-for="(item, index) in products"
                 :key="index"
                 @click="expandCard(index)"
-                class="carousel-item relative w-[350px] h-full min-h-[600px] mr-[70px]"
+                class="carousel-item relative lg:w-[350px] h-full min-h-[600px] mr-5 lg:mr-[70px]"
               >
                 <h1
-                  class="text-[90px] w-[350px] text-wrap leading-[90px] font-bold text-primary"
+                  class="text-[50px] lg:text-[90px] w-[200px] lg:w-[350px] text-wrap leading-[50px] lg:leading-[90px] font-bold text-primary"
                 >
                   {{ item.title }}
                 </h1>
                 <div class="w-[350px]">
                   <img
                     id="mainImg"
-                    class="h-[200px] relative transform translate-x-[100%] -top-9 w-full object-cover"
+                    class="h-[200px] relative transform translate-x-[100%] -top-5 lg:-top-9 w-full object-cover"
                     :src="item.image"
                     alt=""
                   />
